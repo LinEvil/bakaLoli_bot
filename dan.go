@@ -29,7 +29,6 @@ func main() {
 	u.Timeout = 60
 	updates := bot.GetUpdatesChan(u)
 
-	/// START ///
 	stickerIDs0 = getStickerSet("maimai_dx", bot)
 	stickerIDs1 = getStickerSet("nanpuyue_favorite", bot)
 	stickerIDs2 = getStickerSet("adashima", bot)
