@@ -39,7 +39,7 @@ func main() {
 		}
 		if update.Message.IsCommand() {
 			switch cmd := update.Message.Command(); cmd {
-			case "set":
+			case "sets":
 				// commandSet(update.Message, bot)
 			case "maimai":
 				go commandMaimai(update.Message, bot)
