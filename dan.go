@@ -3,8 +3,10 @@ package main
 import (
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 
+	"fmt"
 	"log"
 	"math/rand"
+	"os"
 	"time"
 )
 
@@ -13,9 +15,12 @@ var stickerIDs1 []string
 var stickerIDs2 []string
 
 func main() {
-	botID := "1"
-	botToken := "1"
-	bot, err := tgbotapi.NewBotAPI(botID + ":" + botToken)
+	botToken := os.Args[1]
+	if len(botToken) < 10 {
+		fmt.Printf("No botToken!")
+		return
+	}
+	bot, err := tgbotapi.NewBotAPI(botToken)
 	if err != nil {
 		log.Panic(err)
 	}
