@@ -24,6 +24,7 @@ func main() {
 	if err != nil {
 		log.Panic(err)
 	}
+	log.Printf("Bot start")
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 	updates := bot.GetUpdatesChan(u)
