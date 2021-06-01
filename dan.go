@@ -25,6 +25,7 @@ func main() {
 		log.Panic(err)
 	}
 	log.Printf("Bot start")
+	log.Printf("Authorized on account %s", bot.Self.UserName)
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 	updates := bot.GetUpdatesChan(u)
@@ -37,12 +38,16 @@ func main() {
 		if update.Message == nil {
 			continue
 		}
+		log.Printf("[%s %d] %s", update.Message.From.UserName, update.Message.From.ID, update.Message.Text)
+
 		if update.Message.IsCommand() {
 			switch cmd := update.Message.Command(); cmd {
 			case "sets":
 				// commandSet(update.Message, bot)
+
 			case "maimai":
 				go commandMaimai(update.Message, bot)
+
 			case "qiao":
 				go commandQiao(update.Message, bot)
 
@@ -51,13 +56,16 @@ func main() {
 
 			case "shima":
 				go commandAdashima(update.Message, bot)
+
+			case "json":
+				go commandJson(update.Message, bot)
 			}
 		}
 	}
 }
 
 func getStickerSet(setID string, bot *tgbotapi.BotAPI) []string {
-	stickerSet, _ := bot.GetStickerSet(tgbotapi.GetStickerSetConfig{setID})
+	stickerSet, _ := bot.GetStickerSet(tgbotapi.GetStickerSetConfig{Name: setID})
 	stickerIDs := []string{}
 	for _, s := range stickerSet.Stickers {
 		stickerIDs = append(stickerIDs, s.FileID)
@@ -75,6 +83,7 @@ func commandMaimai(message *tgbotapi.Message, bot *tgbotapi.BotAPI) {
 	rand.Seed(time.Now().Unix())
 	stickerID := stickerIDs0[rand.Intn(len(stickerIDs0))]
 	msgSend := tgbotapi.NewStickerShare(message.Chat.ID, stickerID)
+	msgSend.ReplyToMessageID = message.MessageID
 	bot.Send(msgSend)
 }
 
@@ -82,6 +91,7 @@ func commandQiao(message *tgbotapi.Message, bot *tgbotapi.BotAPI) {
 	rand.Seed(time.Now().Unix())
 	stickerID := stickerIDs1[rand.Intn(len(stickerIDs1))]
 	msgSend := tgbotapi.NewStickerShare(message.Chat.ID, stickerID)
+	msgSend.ReplyToMessageID = message.MessageID
 	bot.Send(msgSend)
 }
 
@@ -89,5 +99,16 @@ func commandAdashima(message *tgbotapi.Message, bot *tgbotapi.BotAPI) {
 	rand.Seed(time.Now().Unix())
 	stickerID := stickerIDs2[rand.Intn(len(stickerIDs2))]
 	msgSend := tgbotapi.NewStickerShare(message.Chat.ID, stickerID)
+	msgSend.ReplyToMessageID = message.MessageID
+	bot.Send(msgSend)
+}
+
+func commandJson(message *tgbotapi.Message, bot *tgbotapi.BotAPI) {
+	if message.ReplyToMessage == nil {
+		return
+	}
+	// log.Printf("%s", message.ReplyToMessage)
+	msgSend := tgbotapi.NewMessage(message.Chat.ID, "in dev...")
+	msgSend.ReplyToMessageID = message.MessageID
 	bot.Send(msgSend)
 }
